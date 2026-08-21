@@ -1,0 +1,755 @@
+<div class="profile-page">
+
+  <!-- SUCCESS / ERROR POPUP -->
+  @if (showSuccessPopup) {
+
+    <div class="profile-popup-overlay">
+
+      <div
+        class="profile-popup"
+        [class.profile-popup-success]="popupType === 'success'"
+        [class.profile-popup-error]="popupType === 'error'">
+
+        <div class="popup-icon">
+
+          {{ popupType === 'success' ? '✓' : '!' }}
+
+        </div>
+
+        <div class="popup-content">
+
+          <h3>
+
+            {{
+              popupType === 'success'
+                ? 'Success'
+                : 'Failed'
+            }}
+
+          </h3>
+
+          <p>
+            {{ successPopupMessage }}
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          class="popup-close"
+          (click)="closePopup()"
+          aria-label="Close notification">
+
+          ×
+
+        </button>
+
+      </div>
+
+    </div>
+
+  }
+
+
+  <main class="profile-container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-heading">
+
+      <span>
+        ACCOUNT
+      </span>
+
+      <h1>
+        My Profile
+      </h1>
+
+      <p>
+        Manage your personal information and account security.
+      </p>
+
+    </div>
+
+
+    <!-- PROFILE HEADER -->
+
+    <section class="profile-header-card">
+
+      <div class="profile-avatar">
+
+        {{ getInitial() }}
+
+      </div>
+
+
+      <div class="profile-main-info">
+
+        <h2>
+          {{ getFullName() }}
+        </h2>
+
+        <p>
+          {{ getEmail() }}
+        </p>
+
+
+        <div class="profile-tags">
+
+          <span class="role-badge">
+
+            {{ getRole() }}
+
+          </span>
+
+
+          <span class="user-id">
+
+            User ID {{ getUserId() }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PERSONAL INFORMATION -->
+
+    <section class="profile-card">
+
+      <div class="card-heading">
+
+        <div>
+
+          <span class="section-label">
+            PERSONAL INFORMATION
+          </span>
+
+          <h2>
+            Account Details
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="information-grid">
+
+        <div class="information-item">
+
+          <span>FULL NAME</span>
+
+          <strong>
+            {{ getFullName() }}
+          </strong>
+
+        </div>
+
+
+        <div class="information-item">
+
+          <span>EMAIL ADDRESS</span>
+
+          <strong>
+            {{ getEmail() }}
+          </strong>
+
+        </div>
+
+
+        <div class="information-item">
+
+          <span>USER ID</span>
+
+          <strong>
+            {{ getUserId() }}
+          </strong>
+
+        </div>
+
+
+        <div class="information-item">
+
+          <span>ACCOUNT TYPE</span>
+
+          <strong>
+            {{ getRole() }}
+          </strong>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SECURITY -->
+
+    <section class="profile-card">
+
+      <div class="card-heading">
+
+        <div>
+
+          <span class="section-label">
+            SECURITY
+          </span>
+
+          <h2>
+            Password & Security
+          </h2>
+
+          <p>
+            Manage your password and account recovery options.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- CHANGE PASSWORD -->
+
+      <div class="security-option">
+
+        <div class="security-icon">
+          🔒
+        </div>
+
+
+        <div class="security-content">
+
+          <h3>
+            Change Password
+          </h3>
+
+          <p>
+            Update your account password regularly
+            to keep your account secure.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="toggleChangePassword()">
+
+          {{
+            showChangePassword
+              ? 'Close'
+              : 'Change Password'
+          }}
+
+        </button>
+
+      </div>
+
+
+      @if (showChangePassword) {
+
+        <div class="action-panel">
+
+          <div class="panel-title">
+            Change Password
+          </div>
+
+
+          @if (passwordMessage) {
+
+            <p class="success-message">
+
+              {{ passwordMessage }}
+
+            </p>
+
+          }
+
+
+          @if (passwordError) {
+
+            <p class="error-message">
+
+              {{ passwordError }}
+
+            </p>
+
+          }
+
+
+          <div class="form-row">
+
+            <label>
+              Current Password
+            </label>
+
+            <div class="password-input-wrapper">
+
+              <input
+                [type]="
+                  showCurrentPassword
+                    ? 'text'
+                    : 'password'
+                "
+                [(ngModel)]="currentPassword"
+                placeholder="Enter current password"
+              >
+
+              <button
+                type="button"
+                class="password-visibility-button"
+                (click)="toggleCurrentPassword()"
+                [attr.aria-label]="
+                  showCurrentPassword
+                    ? 'Hide password'
+                    : 'Show password'
+                ">
+
+                {{ showCurrentPassword ? '🙈' : '👁️' }}
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-row">
+
+            <label>
+              New Password
+            </label>
+
+            <div class="password-input-wrapper">
+
+              <input
+                [type]="
+                  showNewPassword
+                    ? 'text'
+                    : 'password'
+                "
+                [(ngModel)]="newPassword"
+                placeholder="Enter new password"
+              >
+
+              <button
+                type="button"
+                class="password-visibility-button"
+                (click)="toggleNewPassword()"
+                [attr.aria-label]="
+                  showNewPassword
+                    ? 'Hide password'
+                    : 'Show password'
+                ">
+
+                {{ showNewPassword ? '🙈' : '👁️' }}
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-row">
+
+            <label>
+              Confirm New Password
+            </label>
+
+            <div class="password-input-wrapper">
+
+              <input
+                [type]="
+                  showConfirmPassword
+                    ? 'text'
+                    : 'password'
+                "
+                [(ngModel)]="confirmPassword"
+                placeholder="Confirm new password"
+              >
+
+              <button
+                type="button"
+                class="password-visibility-button"
+                (click)="toggleConfirmPassword()"
+                [attr.aria-label]="
+                  showConfirmPassword
+                    ? 'Hide password'
+                    : 'Show password'
+                ">
+
+                {{ showConfirmPassword ? '🙈' : '👁️' }}
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="submitChangePassword()">
+
+            Change Password
+
+          </button>
+
+        </div>
+
+      }
+
+
+      <!-- FORGOT PASSWORD -->
+
+      <div class="security-option">
+
+        <div class="security-icon">
+          🔑
+        </div>
+
+
+        <div class="security-content">
+
+          <h3>
+            Forgot Password
+          </h3>
+
+          <p>
+            Reset your password using your registered email.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="secondary-button"
+          (click)="toggleForgotPassword()">
+
+          {{
+            showForgotPassword
+              ? 'Close'
+              : 'Reset Password'
+          }}
+
+        </button>
+
+      </div>
+
+
+      @if (showForgotPassword) {
+
+        <div class="action-panel">
+
+          <div class="panel-title">
+            Reset Password
+          </div>
+
+
+          @if (forgotMessage) {
+
+            <p class="success-message">
+              {{ forgotMessage }}
+            </p>
+
+          }
+
+
+          @if (forgotError) {
+
+            <p class="error-message">
+              {{ forgotError }}
+            </p>
+
+          }
+
+
+          <div class="form-row">
+
+            <label>
+              Registered Email
+            </label>
+
+            <input
+              type="email"
+              [(ngModel)]="forgotEmail"
+              placeholder="Enter your email"
+            >
+
+          </div>
+
+
+          <div class="form-row">
+
+            <label>
+              New Password
+            </label>
+
+            <div class="password-input-wrapper">
+
+              <input
+                [type]="
+                  showForgotNewPassword
+                    ? 'text'
+                    : 'password'
+                "
+                [(ngModel)]="forgotNewPassword"
+                placeholder="Enter new password"
+              >
+
+              <button
+                type="button"
+                class="password-visibility-button"
+                (click)="toggleForgotNewPassword()">
+
+                {{ showForgotNewPassword ? '🙈' : '👁️' }}
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-row">
+
+            <label>
+              Confirm New Password
+            </label>
+
+            <div class="password-input-wrapper">
+
+              <input
+                [type]="
+                  showForgotConfirmPassword
+                    ? 'text'
+                    : 'password'
+                "
+                [(ngModel)]="forgotConfirmPassword"
+                placeholder="Confirm new password"
+              >
+
+              <button
+                type="button"
+                class="password-visibility-button"
+                (click)="toggleForgotConfirmPassword()">
+
+                {{ showForgotConfirmPassword ? '🙈' : '👁️' }}
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="submitForgotPassword()">
+
+            Reset Password
+
+          </button>
+
+        </div>
+
+      }
+
+
+    </section>
+
+
+    <!-- EMAIL SETTINGS -->
+
+    <section class="profile-card">
+
+      <div class="card-heading">
+
+        <div>
+
+          <span class="section-label">
+            EMAIL SETTINGS
+          </span>
+
+          <h2>
+            Change Email Address
+          </h2>
+
+          <p>
+            Update the email associated with your account.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="email-current">
+
+        <span>
+          CURRENT EMAIL
+        </span>
+
+        <strong>
+          {{ getEmail() }}
+        </strong>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="email-request-button"
+        (click)="toggleChangeEmail()">
+
+        📧
+
+        {{
+          showChangeEmail
+            ? 'Close'
+            : 'Change Email Address'
+        }}
+
+      </button>
+
+
+      @if (showChangeEmail) {
+
+        <div class="action-panel">
+
+          <div class="panel-title">
+            Change Email Address
+          </div>
+
+
+          @if (emailMessage) {
+
+            <p class="success-message">
+              {{ emailMessage }}
+            </p>
+
+          }
+
+
+          @if (emailError) {
+
+            <p class="error-message">
+              {{ emailError }}
+            </p>
+
+          }
+
+
+          <div class="form-row">
+
+            <label>
+              Current Email
+            </label>
+
+            <input
+              type="email"
+              [value]="getEmail()"
+              readonly
+            >
+
+          </div>
+
+
+          <div class="form-row">
+
+            <label>
+              New Email Address
+            </label>
+
+            <input
+              type="email"
+              [(ngModel)]="newEmail"
+              placeholder="Enter new email address"
+            >
+
+          </div>
+
+
+          <button
+            type="button"
+            class="primary-button"
+            (click)="submitChangeEmail()">
+
+            Change Email Address
+
+          </button>
+
+        </div>
+
+      }
+
+    </section>
+
+
+    <!-- ACCOUNT ACTIONS -->
+
+    <section class="profile-card account-actions-card">
+
+      <div class="card-heading">
+
+        <div>
+
+          <span class="section-label">
+            ACCOUNT
+          </span>
+
+          <h2>
+            Account Actions
+          </h2>
+
+          <p>
+            Manage your current session.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="logout-row">
+
+        <div>
+
+          <h3>
+            Sign out
+          </h3>
+
+          <p>
+            Sign out of your SpaceSync account on this device.
+          </p>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()">
+
+          Logout
+
+        </button>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+</div>

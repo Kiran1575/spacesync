@@ -1,0 +1,131 @@
+<nav class="navbar">
+
+  <div class="navbar-container">
+
+    <a routerLink="/" class="brand">
+      <span class="brand-icon">✦</span>
+      <span class="brand-text">Space<span>Sync</span></span>
+    </a>
+
+    <button
+      class="mobile-toggle"
+      [class.active]="menuOpen"
+      type="button"
+      (click)="toggleMenu()"
+      aria-label="Toggle menu">
+
+      <span></span>
+      <span></span>
+      <span></span>
+
+    </button>
+
+    <div
+      class="navbar-content"
+      [class.open]="menuOpen">
+
+      <div class="nav-links">
+
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="nav-link">
+          Home
+        </a>
+
+        <a
+          routerLink="/spaces"
+          routerLinkActive="active"
+          class="nav-link">
+          Spaces
+        </a>
+
+        @if (isLoggedIn) {
+
+          <a
+            routerLink="/dashboard"
+            routerLinkActive="active"
+            class="nav-link">
+            Dashboard
+          </a>
+
+          <a
+            routerLink="/my-bookings"
+            routerLinkActive="active"
+            class="nav-link">
+            My Bookings
+          </a>
+
+          <a
+            routerLink="/profile"
+            routerLinkActive="active"
+            class="nav-link">
+            Profile
+          </a>
+
+          @if (currentUser?.role === 'ADMIN') {
+
+            <a
+              routerLink="/admin"
+              routerLinkActive="active"
+              class="nav-link">
+              Admin
+            </a>
+
+          }
+
+        }
+
+      </div>
+
+      <div class="auth-area">
+
+        @if (!isLoggedIn) {
+
+          <a
+            routerLink="/login"
+            class="login-button">
+            Login
+          </a>
+
+          <a
+            routerLink="/register"
+            class="register-button">
+            Get Started
+          </a>
+
+        }
+
+        @if (isLoggedIn) {
+
+          <div class="user-area">
+
+            <div class="user-avatar">
+              {{ currentUser?.fullName?.charAt(0)?.toUpperCase() || 'U' }}
+            </div>
+
+            <span class="user-name">
+              {{ currentUser?.fullName || 'User' }}
+            </span>
+
+          </div>
+
+          <button
+            type="button"
+            class="logout-button"
+            (click)="logout()">
+
+            Logout
+
+          </button>
+
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+
+</nav>

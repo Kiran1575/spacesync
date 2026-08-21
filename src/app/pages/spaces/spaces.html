@@ -1,0 +1,217 @@
+<main class="spaces-page">
+
+  <section class="spaces-header">
+
+    <div>
+
+      <div class="eyebrow">
+        WORKSPACES
+      </div>
+
+      <h1>
+        Explore Spaces
+      </h1>
+
+      <p>
+        Find the perfect workspace for your work, study,
+        meetings and collaboration.
+      </p>
+
+    </div>
+
+    @if (!loading && !errorMessage) {
+
+      <div class="space-count">
+        {{ spaces.length }} spaces available
+      </div>
+
+    }
+
+  </section>
+
+
+  @if (loading) {
+
+    <section class="loading-section">
+
+      <div class="spinner"></div>
+
+      <h3>
+        Loading spaces...
+      </h3>
+
+      <p>
+        Please wait while we load available workspaces.
+      </p>
+
+    </section>
+
+  }
+
+
+  @if (!loading && errorMessage) {
+
+    <section class="message-card error-card">
+
+      <div class="empty-icon">
+        ⚠️
+      </div>
+
+      <h2>
+        Unable to load spaces
+      </h2>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="loadSpaces()"
+      >
+        Try Again
+      </button>
+
+    </section>
+
+  }
+
+
+  @if (!loading && !errorMessage && spaces.length > 0) {
+
+    <section class="spaces-grid">
+
+      @for (space of spaces; track space.id) {
+
+        <article
+          class="space-card"
+          (click)="viewDetails(space.id)"
+        >
+
+          <div class="image-wrapper">
+
+            <img
+              class="space-image"
+              [src]="getImage(space)"
+              (error)="onImageError($event)"
+              [alt]="space.name"
+            >
+
+            @if (space.available) {
+
+              <span class="available-badge">
+                ✓ Available
+              </span>
+
+            } @else {
+
+              <span
+                class="available-badge"
+                style="background:#fee2e2;color:#b91c1c;"
+              >
+                ✕ Unavailable
+              </span>
+
+            }
+
+          </div>
+
+
+          <div class="space-content">
+
+            <span class="space-type">
+              {{ space.type }}
+            </span>
+
+
+            <h2>
+              {{ space.name }}
+            </h2>
+
+
+            <p class="location">
+              📍 {{ space.location }}
+            </p>
+
+
+            <p class="description">
+              {{ space.description }}
+            </p>
+
+
+            <div class="space-info">
+
+              <div>
+
+                <span>
+                  Capacity
+                </span>
+
+                <br>
+
+                <strong>
+                  {{ space.capacity }} people
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Price
+                </span>
+
+                <br>
+
+                <strong>
+                  ₹{{ space.price }}/hour
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <button
+              type="button"
+              class="view-button"
+              (click)="viewDetails(space.id); $event.stopPropagation()"
+            >
+              View Details →
+            </button>
+
+          </div>
+
+        </article>
+
+      }
+
+    </section>
+
+  }
+
+
+  @if (!loading && !errorMessage && spaces.length === 0) {
+
+    <section class="message-card">
+
+      <div class="empty-icon">
+        🏢
+      </div>
+
+      <h2>
+        No spaces available
+      </h2>
+
+      <p>
+        There are currently no workspaces available.
+        Please check again later.
+      </p>
+
+    </section>
+
+  }
+
+</main>

@@ -1,0 +1,403 @@
+<div class="booking-page">
+
+  <!-- INITIAL SPACE LOADING -->
+  @if (isLoadingSpace && !space) {
+
+    <section class="loading-section">
+
+      <div class="spinner"></div>
+
+      <h2>Loading booking...</h2>
+
+      <p>
+        Please wait while we load the selected space.
+      </p>
+
+    </section>
+
+  }
+
+
+  <!-- SPACE LOADING ERROR -->
+  @if (!space && !isLoadingSpace && errorMessage) {
+
+    <section class="error-section">
+
+      <div class="error-icon">
+        !
+      </div>
+
+      <h2>Unable to load booking</h2>
+
+      <p>
+        {{ errorMessage }}
+      </p>
+
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()">
+
+        Back to spaces
+
+      </button>
+
+    </section>
+
+  }
+
+
+  <!-- BOOKING PAGE -->
+  <!-- IMPORTANT: only check whether space exists -->
+  @if (space) {
+
+    <main class="booking-container">
+
+      <!-- PAGE HEADING -->
+      <div class="page-heading">
+
+        <span>RESERVE YOUR SPACE</span>
+
+        <h1>
+          Book your workspace
+        </h1>
+
+        <p>
+          Choose your date, time and duration.
+        </p>
+
+      </div>
+
+
+      <div class="booking-layout">
+
+        <!-- SPACE DETAILS -->
+        <section class="space-card">
+
+          <img
+            [src]="spaceService.resolveImage(space)"
+            (error)="onImageError($event)"
+            [alt]="getSpaceName()"
+            class="space-image">
+
+          <div class="space-info">
+
+            <span class="space-type">
+              {{ space.type || 'Workspace' }}
+            </span>
+
+            <h2>
+              {{ getSpaceName() }}
+            </h2>
+
+            <p class="location">
+              📍 {{ getLocation() }}
+            </p>
+
+            <p class="description">
+              {{
+                space.description ||
+                'A comfortable and professional workspace for productive work and collaboration.'
+              }}
+            </p>
+
+            <div class="space-meta">
+
+              <div>
+
+                <span>
+                  Capacity
+                </span>
+
+                <strong>
+                  {{ space.capacity || 'N/A' }} people
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Price
+                </span>
+
+                <strong>
+                  ₹{{ getPrice() }}/hour
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- BOOKING FORM / SUCCESS -->
+        <section class="booking-card">
+
+
+          <!-- ========================= -->
+          <!-- BOOKING FORM -->
+          <!-- ========================= -->
+
+          @if (!confirmedBooking) {
+
+            <h2>
+              Booking details
+            </h2>
+
+            <p class="form-subtitle">
+              Select when you want to use this space.
+            </p>
+
+
+            <!-- DATE -->
+            <div class="form-group">
+
+              <label for="bookingDate">
+                Date
+              </label>
+
+              <input
+                id="bookingDate"
+                type="date"
+                [(ngModel)]="bookingDate">
+
+            </div>
+
+
+            <!-- START TIME -->
+            <div class="form-group">
+
+              <label for="startTime">
+                Start time
+              </label>
+
+              <input
+                id="startTime"
+                type="time"
+                [(ngModel)]="startTime">
+
+            </div>
+
+
+            <!-- DURATION -->
+            <div class="form-group">
+
+              <label for="duration">
+                Duration
+              </label>
+
+              <select
+                id="duration"
+                [(ngModel)]="duration">
+
+                <option [ngValue]="1">
+                  1 hour
+                </option>
+
+                <option [ngValue]="2">
+                  2 hours
+                </option>
+
+                <option [ngValue]="3">
+                  3 hours
+                </option>
+
+                <option [ngValue]="4">
+                  4 hours
+                </option>
+
+                <option [ngValue]="5">
+                  5 hours
+                </option>
+
+                <option [ngValue]="6">
+                  6 hours
+                </option>
+
+                <option [ngValue]="8">
+                  8 hours
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <!-- PRICE -->
+            <div class="price-summary">
+
+              <div>
+
+                <span>
+                  {{ duration }} hour × ₹{{ getPrice() }}
+                </span>
+
+                <strong>
+                  ₹{{ getTotal() }}
+                </strong>
+
+              </div>
+
+              <small>
+                Final amount
+              </small>
+
+            </div>
+
+
+            <!-- ERROR -->
+            @if (errorMessage) {
+
+              <div class="form-error">
+                {{ errorMessage }}
+              </div>
+
+            }
+
+
+            <!-- CONFIRM BUTTON -->
+            <button
+              type="button"
+              class="confirm-button"
+              [disabled]="isBooking"
+              (click)="confirmBooking()">
+
+              @if (isBooking) {
+                Confirming booking...
+              } @else {
+                Confirm booking
+              }
+
+            </button>
+
+
+            <p class="login-note">
+              Your booking will be linked to your SpaceSync account.
+            </p>
+
+          }
+
+
+          <!-- ========================= -->
+          <!-- BOOKING SUCCESS -->
+          <!-- ========================= -->
+
+          @if (confirmedBooking) {
+
+            <div class="booking-success">
+
+              <div class="success-icon">
+                ✓
+              </div>
+
+              <h2>
+                Booking confirmed!
+              </h2>
+
+              <p class="success-message">
+
+                Your booking for
+                <strong>{{ getSpaceName() }}</strong>
+                on
+                {{ confirmedBooking.bookingDate }}
+                at
+                {{ confirmedBooking.startTime }}
+                is confirmed.
+
+              </p>
+
+
+              <div class="success-summary">
+
+                <div>
+
+                  <span>
+                    Booking ID
+                  </span>
+
+                  <strong>
+                    #{{ confirmedBooking.id }}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Total Paid
+                  </span>
+
+                  <strong>
+                    ₹{{ confirmedBooking.totalAmount }}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Status
+                  </span>
+
+                  <strong>
+                    {{ confirmedBooking.status }}
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <div class="success-actions">
+
+                <button
+                  type="button"
+                  class="view-bookings-button"
+                  (click)="viewMyBookings()">
+
+                  View Booking →
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="download-button"
+                  (click)="downloadReceipt()">
+
+                  ⬇ Download Receipt (PDF)
+
+                </button>
+
+
+                <button
+                  type="button"
+                  class="book-another-button"
+                  (click)="bookAnother()">
+
+                  Book Another Space
+
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </section>
+
+      </div>
+
+    </main>
+
+  }
+
+</div>

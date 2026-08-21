@@ -1,0 +1,324 @@
+<!-- LEFT SIDE -->
+ <div class="login-page">
+
+  <div class="login-container">
+
+<div class="login-info">
+
+  <a routerLink="/" class="brand">
+    SpaceSync
+  </a>
+
+  <div class="info-content">
+
+    <span class="badge-text">
+      WELCOME BACK
+    </span>
+
+    <h1>
+      Your space.
+      <span>Your productivity.</span>
+    </h1>
+
+    <p>
+      Access your bookings, discover new spaces
+      and manage everything from one simple dashboard.
+    </p>
+
+    <div class="quick-points">
+
+      <div>
+        <span>✓</span>
+        Manage your bookings
+      </div>
+
+      <div>
+        <span>✓</span>
+        Discover available spaces
+      </div>
+
+      <div>
+        <span>✓</span>
+        Get personalized recommendations
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- LOGIN FORM SECTION -->
+
+<div class="login-form-section">
+
+  <div class="form-wrapper">
+
+
+    <!-- MOBILE BRAND -->
+
+    <div class="mobile-brand">
+
+      <a routerLink="/">
+        SpaceSync
+      </a>
+
+    </div>
+
+
+    <!-- HEADER -->
+
+    <div class="form-header">
+
+      <h2>
+        Welcome back
+      </h2>
+
+      <p>
+        Login to continue to SpaceSync.
+      </p>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- SUCCESS MESSAGE -->
+    <!-- ========================= -->
+
+    @if(successMessage) {
+
+      <div class="success-message">
+
+        <span class="message-icon">
+          ✓
+        </span>
+
+        <div>
+
+          <strong>
+            Success!
+          </strong>
+
+          <p>
+            {{ successMessage }}
+          </p>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- ========================= -->
+    <!-- ERROR MESSAGE -->
+    <!-- ========================= -->
+
+    @if(errorMessage) {
+
+      <div class="error-message">
+
+        <span class="message-icon">
+          !
+        </span>
+
+        <div>
+
+          <strong>
+            Login failed
+          </strong>
+
+          <p>
+            {{ errorMessage }}
+          </p>
+
+        </div>
+
+      </div>
+
+    }
+    @if(successMessage) {
+
+  <div class="success-message">
+
+    <span class="message-icon">✓</span>
+
+    <div>
+      <strong>Success!</strong>
+      <p>{{ successMessage }}</p>
+    </div>
+
+  </div>
+
+}
+
+@if(errorMessage) {
+
+  <div class="error-message">
+
+    <span class="message-icon">!</span>
+
+    <div>
+      <strong>Login failed</strong>
+      <p>{{ errorMessage }}</p>
+    </div>
+
+  </div>
+
+}
+
+    <!-- ========================= -->
+    <!-- LOGIN FORM -->
+    <!-- ========================= -->
+
+    <form
+      #loginForm="ngForm"
+      (ngSubmit)="login()">
+
+
+      <!-- EMAIL -->
+
+      <div class="form-group">
+
+        <label for="email">
+          Email Address
+        </label>
+
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="credentials.email"
+          required
+          email
+          placeholder="you@example.com"
+          #email="ngModel"
+        >
+
+
+        @if(email.invalid && email.touched) {
+
+          <small>
+            Please enter a valid email address.
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- PASSWORD -->
+
+      <div class="form-group">
+
+        <div class="password-label">
+
+          <label for="password">
+            Password
+          </label>
+
+          <a
+            href="javascript:void(0)"
+            class="forgot-password"
+          >
+            Forgot password?
+          </a>
+
+        </div>
+
+
+        <div class="password-wrapper">
+
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            name="password"
+            [(ngModel)]="credentials.password"
+            required
+            placeholder="Enter your password"
+            #password="ngModel"
+          >
+
+
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="showPassword = !showPassword"
+          >
+
+            {{ showPassword ? 'Hide' : 'Show' }}
+
+          </button>
+
+        </div>
+
+
+        @if(password.invalid && password.touched) {
+
+          <small>
+            Please enter your password.
+          </small>
+
+        }
+
+      </div>
+
+
+      <!-- REMEMBER ME -->
+
+      <div class="remember">
+
+        <label>
+
+          <input
+            type="checkbox"
+            name="rememberMe"
+          >
+
+          Remember me
+
+        </label>
+
+      </div>
+
+
+      <!-- LOGIN BUTTON -->
+
+      <button
+  type="submit"
+  class="login-btn"
+  [disabled]="loginForm.invalid || isLoading">
+
+  @if(isLoading) {
+
+    Logging in...
+
+  } @else {
+
+    Login
+
+  }
+
+</button>
+
+
+    </form>
+
+
+    <!-- REGISTER LINK -->
+
+    <div class="register-link">
+
+      Don't have an account?
+
+      <a routerLink="/register">
+        Create one
+      </a>
+
+    </div>
+
+
+  </div>
+
+</div>

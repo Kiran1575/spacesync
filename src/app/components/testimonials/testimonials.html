@@ -1,0 +1,57 @@
+<section class="testimonials">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2>What Our Users Say</h2>
+
+            <p>
+                Trusted by professionals and students.
+            </p>
+
+        </div>
+
+        <div class="row">
+
+            @for(review of reviews; track review.name){
+
+            <div class="col-lg-4 mb-4">
+
+                <div class="testimonial-card">
+
+                    <div class="stars">
+
+                        ⭐⭐⭐⭐⭐
+
+                    </div>
+
+                    <p class="comment">
+
+                        "{{review.comment}}"
+
+                    </p>
+
+                    <h5>
+
+                        {{review.name}}
+
+                    </h5>
+
+                    <span>
+
+                        {{review.role}}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+    </div>
+
+</section>

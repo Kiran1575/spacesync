@@ -1,0 +1,51 @@
+<section class="features">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <h2>Why Choose SpaceSync?</h2>
+
+            <p>
+                Everything you need to book the perfect workspace.
+            </p>
+
+        </div>
+
+        <div class="row">
+
+            @for(feature of features; track feature.title){
+
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+
+                        {{feature.icon}}
+
+                    </div>
+
+                    <h4>
+
+                        {{feature.title}}
+
+                    </h4>
+
+                    <p>
+
+                        {{feature.description}}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+    </div>
+
+</section>

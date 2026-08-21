@@ -1,0 +1,172 @@
+<div class="details-page">
+
+  @if (isLoading) {
+
+    <section class="loading-section">
+
+      <div class="spinner"></div>
+
+      <h2>Loading space...</h2>
+
+      <p>Please wait while we load the space details.</p>
+
+    </section>
+
+  }
+
+
+  @if (!isLoading && errorMessage) {
+
+    <section class="error-section">
+
+      <div class="error-icon">!</div>
+
+      <h2>Unable to load this space</h2>
+
+      <p>{{ errorMessage }}</p>
+
+      <button
+        type="button"
+        class="retry-button"
+        (click)="retry()">
+
+        Try Again
+
+      </button>
+
+    </section>
+
+  }
+
+
+  @if (!isLoading && !errorMessage && space) {
+
+    <main class="details-container">
+
+      <section class="image-section">
+
+        <img
+          [src]="getImage()"
+          (error)="onImageError($event)"
+          [alt]="getSpaceName()"
+          class="space-image">
+
+        <div class="image-badge">
+          {{ space.type || 'Workspace' }}
+        </div>
+
+      </section>
+
+
+      <section class="space-content">
+
+        <span class="eyebrow">
+          AVAILABLE SPACE
+        </span>
+
+        <h1>
+          {{ getSpaceName() }}
+        </h1>
+
+        <p class="location">
+          📍 {{ getLocation() }}
+        </p>
+
+
+        <div class="description">
+
+          <h2>About this space</h2>
+
+          <p>
+            {{
+              space.description ||
+              'A comfortable and professional workspace designed for productive work, meetings and collaboration.'
+            }}
+          </p>
+
+        </div>
+
+
+        <div class="features">
+
+          <div class="feature-card">
+
+            <span class="feature-icon">👥</span>
+
+            <div>
+              <small>Capacity</small>
+
+              <strong>
+                {{ space.capacity || 'N/A' }}
+              </strong>
+
+              <span>people</span>
+            </div>
+
+          </div>
+
+
+          <div class="feature-card">
+
+            <span class="feature-icon">📍</span>
+
+            <div>
+              <small>Location</small>
+
+              <strong>
+                {{ getLocation() }}
+              </strong>
+            </div>
+
+          </div>
+
+
+          <div class="feature-card">
+
+            <span class="feature-icon">💼</span>
+
+            <div>
+              <small>Type</small>
+
+              <strong>
+                {{ space.type || 'Workspace' }}
+              </strong>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="booking-card">
+
+          <div class="price-area">
+
+            <span>Starting from</span>
+
+            <strong>
+              {{ getPrice() }}
+              <small>/ hour</small>
+            </strong>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="book-button"
+            (click)="bookSpace()">
+
+            Book this space →
+
+          </button>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  }
+
+</div>

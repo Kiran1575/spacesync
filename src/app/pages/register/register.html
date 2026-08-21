@@ -1,0 +1,358 @@
+<div class="register-page">
+
+  <div class="register-container">
+
+    <!-- ========================================= -->
+    <!-- LEFT INFORMATION SECTION -->
+    <!-- ========================================= -->
+
+    <div class="register-info">
+
+      <a routerLink="/" class="brand">
+        SpaceSync
+      </a>
+
+      <div class="info-content">
+
+        <span class="badge-text">
+          JOIN SPACESYNC
+        </span>
+
+        <h1>
+          Find your space.
+          <span>Do your best work.</span>
+        </h1>
+
+        <p>
+          Create your account and discover coworking,
+          study, discussion and meeting spaces around you.
+        </p>
+
+        <div class="benefits">
+
+          <div class="benefit">
+            <span>✓</span>
+            Find spaces that match your needs
+          </div>
+
+          <div class="benefit">
+            <span>✓</span>
+            Book in just a few clicks
+          </div>
+
+          <div class="benefit">
+            <span>✓</span>
+            Manage all your bookings in one place
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================================= -->
+    <!-- FORM SECTION -->
+    <!-- ========================================= -->
+
+    <div class="register-form-section">
+
+      <div class="form-wrapper">
+
+
+        <!-- MOBILE BRAND -->
+
+        <div class="mobile-brand">
+
+          <a routerLink="/">
+            SpaceSync
+          </a>
+
+        </div>
+
+
+        <!-- HEADER -->
+
+        <div class="form-header">
+
+          <h2>
+            Create your account
+          </h2>
+
+          <p>
+            Start booking your perfect space today.
+          </p>
+
+        </div>
+
+
+        <!-- ===================================== -->
+        <!-- SUCCESS MESSAGE -->
+        <!-- ===================================== -->
+
+        @if (successMessage) {
+
+          <div class="success-message">
+
+            <span class="message-icon">
+              ✓
+            </span>
+
+            <div>
+
+              <strong>
+                Success!
+              </strong>
+
+              <p>
+                {{ successMessage }}
+              </p>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- ===================================== -->
+        <!-- ERROR MESSAGE -->
+        <!-- ===================================== -->
+
+        @if (errorMessage) {
+
+          <div class="error-message">
+
+            <span class="message-icon">
+              !
+            </span>
+
+            <div>
+
+              <strong>
+                Something went wrong
+              </strong>
+
+              <p>
+                {{ errorMessage }}
+              </p>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- ===================================== -->
+        <!-- REGISTRATION FORM -->
+        <!-- ===================================== -->
+
+        <form
+          #registerForm="ngForm"
+          (ngSubmit)="register()"
+          novalidate>
+
+
+          <!-- ================================= -->
+          <!-- FULL NAME -->
+          <!-- ================================= -->
+
+          <div class="form-group">
+
+            <label for="name">
+              Full Name
+            </label>
+
+            <input
+              id="name"
+              type="text"
+              name="fullName"
+              [(ngModel)]="fullName"
+              required
+              placeholder="Enter your full name"
+              #nameField="ngModel">
+
+            @if (
+              nameField.invalid &&
+              (nameField.touched || registerForm.submitted)
+            ) {
+
+              <small>
+                Please enter your name.
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- EMAIL -->
+          <!-- ================================= -->
+
+          <div class="form-group">
+
+            <label for="email">
+              Email Address
+            </label>
+
+            <input
+              id="email"
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              email
+              placeholder="you@example.com"
+              #emailField="ngModel">
+
+            @if (
+              emailField.invalid &&
+              (emailField.touched || registerForm.submitted)
+            ) {
+
+              <small>
+
+                @if (emailField.errors?.['required']) {
+
+                  Please enter your email address.
+
+                } @else {
+
+                  Please enter a valid email address.
+
+                }
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- PASSWORD -->
+          <!-- ================================= -->
+
+          <div class="form-group">
+
+            <label for="password">
+              Password
+            </label>
+
+            <div class="password-wrapper">
+
+              <input
+                id="password"
+                [type]="showPassword ? 'text' : 'password'"
+                name="password"
+                [(ngModel)]="password"
+                required
+                minlength="6"
+                placeholder="Create a password"
+                #passwordField="ngModel">
+
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="showPassword = !showPassword">
+
+                {{ showPassword ? 'Hide' : 'Show' }}
+
+              </button>
+
+            </div>
+
+
+            @if (
+              passwordField.invalid &&
+              (passwordField.touched || registerForm.submitted)
+            ) {
+
+              <small>
+
+                @if (passwordField.errors?.['required']) {
+
+                  Please enter a password.
+
+                } @else {
+
+                  Password must contain at least 6 characters.
+
+                }
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- TERMS -->
+          <!-- ================================= -->
+
+          <div class="terms">
+
+            <input
+              type="checkbox"
+              id="terms"
+              name="agreeTerms"
+              [(ngModel)]="agreeTerms"
+              required>
+
+            <label for="terms">
+              I agree to the Terms & Conditions
+            </label>
+
+          </div>
+
+
+          <!-- ================================= -->
+          <!-- SUBMIT BUTTON -->
+          <!-- ================================= -->
+
+          <button
+            type="submit"
+            class="register-btn"
+            [disabled]="registerForm.invalid || isLoading">
+
+            @if (isLoading) {
+
+              Creating Account...
+
+            } @else {
+
+              Create Account
+
+            }
+
+          </button>
+
+        </form>
+
+
+        <!-- ===================================== -->
+        <!-- LOGIN LINK -->
+        <!-- ===================================== -->
+
+        <div class="login-link">
+
+          Already have an account?
+
+          <a routerLink="/login">
+            Login
+          </a>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

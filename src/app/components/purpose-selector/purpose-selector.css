@@ -1,0 +1,65 @@
+.purpose-section{
+
+    padding:90px 0;
+
+    background:white;
+
+}
+
+.subtitle{
+
+    color:#64748B;
+
+    margin-top:10px;
+
+    margin-bottom:40px;
+
+}
+
+.purpose-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:35px 25px;
+
+    text-align:center;
+
+    transition:.3s;
+
+    cursor:pointer;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    height:100%;
+
+}
+
+.purpose-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 20px 35px rgba(37,99,235,.20);
+
+}
+
+.icon{
+
+    font-size:50px;
+
+    margin-bottom:20px;
+
+}
+
+.purpose-card h4{
+
+    font-weight:700;
+
+}
+
+.purpose-card p{
+
+    color:#64748B;
+
+}

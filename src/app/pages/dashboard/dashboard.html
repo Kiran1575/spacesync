@@ -1,0 +1,205 @@
+<div class="dashboard-page">
+
+  <main class="dashboard-content">
+
+    <!-- WELCOME -->
+    <section class="welcome-section">
+
+      <div>
+        <span class="welcome-label">
+          DASHBOARD
+        </span>
+
+        <h1>
+          Welcome back, {{ userName }} 👋
+        </h1>
+
+        <p>
+          Find the perfect space and get your best work done.
+        </p>
+      </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+    <section class="search-section">
+
+      <div class="search-box">
+
+        <span class="search-icon">🔍</span>
+
+        <input
+          type="text"
+          placeholder="Search for coworking, study, meeting spaces..."
+        >
+
+        <button type="button">
+          Search
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- QUICK ACTIONS -->
+    <section class="section">
+
+      <h2>
+        Quick Actions
+      </h2>
+
+      <div class="quick-actions">
+
+        <a
+          routerLink="/spaces"
+          class="action-card">
+
+          <div class="action-icon">
+            🔍
+          </div>
+
+          <div>
+            <h3>Find a Space</h3>
+
+            <p>
+              Discover spaces that match your needs.
+            </p>
+          </div>
+
+        </a>
+
+
+        <a
+          routerLink="/my-bookings"
+          class="action-card">
+
+          <div class="action-icon">
+            📅
+          </div>
+
+          <div>
+            <h3>My Bookings</h3>
+
+            <p>
+              View and manage your reservations.
+            </p>
+          </div>
+
+        </a>
+
+
+        <a
+          routerLink="/profile"
+          class="action-card">
+
+          <div class="action-icon">
+            👤
+          </div>
+
+          <div>
+            <h3>My Profile</h3>
+
+            <p>
+              Manage your account information.
+            </p>
+          </div>
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- UPCOMING BOOKING -->
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Upcoming Booking
+        </h2>
+
+        <a routerLink="/bookings">
+          View all
+        </a>
+
+      </div>
+
+
+      <div class="empty-booking">
+
+        <div class="empty-icon">
+          📅
+        </div>
+
+        <h3>
+          No upcoming bookings
+        </h3>
+
+        <p>
+          You haven't booked a space yet.
+          Find a workspace and make your first booking.
+        </p>
+
+        <a
+          routerLink="/spaces"
+          class="primary-btn">
+
+          Explore Spaces
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- RECOMMENDED SPACES -->
+    <section class="section">
+
+      <div class="section-header">
+
+        <h2>
+          Recommended Spaces
+        </h2>
+
+        <a routerLink="/spaces">
+          View all
+        </a>
+
+      </div>
+
+
+      <div class="space-placeholder">
+
+        <div>
+          🏢
+        </div>
+
+        <h3>
+          Explore Available Spaces
+        </h3>
+
+        <p>
+          Explore coworking, study, meeting and discussion
+          spaces around you.
+        </p>
+
+        <a
+          routerLink="/spaces"
+          class="primary-btn">
+
+          Browse Spaces
+
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
