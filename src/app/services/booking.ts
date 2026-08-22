@@ -12,8 +12,7 @@ import {
 })
 export class BookingService {
 
-  private readonly apiUrl =
-    'http://localhost:8080/api/bookings';
+private readonly apiUrl = 'https://spacesync-backend-production.up.railway.app/api/bookings';
 
   constructor(
     private http: HttpClient

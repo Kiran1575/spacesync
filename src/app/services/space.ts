@@ -8,7 +8,7 @@ import { Space } from '../models/space';
 })
 export class SpaceService {
 
-  private readonly apiUrl = 'http://localhost:8080/api/spaces';
+  private readonly apiUrl = 'https://spacesync-backend-production.up.railway.app/api/spaces';
 
   private readonly defaultImages: { [type: string]: string } = {
     Coworking: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=900&q=80',

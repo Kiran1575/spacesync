@@ -7,9 +7,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class AuthService {
 
-  private apiUrl =
-    'http://localhost:8080/api/users';
-
+  private apiUrl = 'https://spacesync-backend-production.up.railway.app/api/users';
   constructor(
     private http: HttpClient
   ) {}
