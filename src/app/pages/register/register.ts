@@ -60,8 +60,7 @@ export class Register {
   // BACKEND API
   // ==========================================
 
-  private readonly apiUrl =
-    'http://localhost:8080/api/users';
+private readonly apiUrl = 'https://spacesync-backend-production.up.railway.app/api/users';
 
 
   // ==========================================
