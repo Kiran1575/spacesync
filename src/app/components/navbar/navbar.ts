@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { Subscription, filter } from 'rxjs';
@@ -24,7 +24,8 @@ export class Navbar implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +37,7 @@ export class Navbar implements OnInit, OnDestroy {
       .subscribe(() => {
         this.updateAuthState();
         this.menuOpen = false;
+        this.cdr.detectChanges();
       });
   }
 
@@ -59,5 +61,6 @@ export class Navbar implements OnInit, OnDestroy {
     this.isLoggedIn = false;
     this.menuOpen = false;
     this.router.navigate(['/']);
+    this.cdr.detectChanges();
   }
 }
