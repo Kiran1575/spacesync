@@ -659,4 +659,294 @@ export class Profile {
 
         'New passwords do not match.';
 
-      this.showPopup(this.forgotError,
+      this.showPopup(this.forgotError, 'error');
+
+      return;
+
+    }
+
+
+
+    // Call backend
+
+    this.authService
+
+      .forgotPassword(
+
+        this.forgotEmail,
+
+        this.forgotNewPassword
+
+      )
+
+      .subscribe({
+
+        next: (response) => {
+
+          this.forgotMessage =
+
+            response?.message ||
+
+            'Password reset successfully.';
+
+
+
+          // Clear form
+
+          this.forgotNewPassword = '';
+
+          this.forgotConfirmPassword = '';
+
+
+
+          // Reset visibility
+
+          this.showForgotNewPassword = false;
+
+          this.showForgotConfirmPassword = false;
+
+
+
+          // SUCCESS POPUP
+
+          this.showPopup(
+
+            'Password reset successfully.',
+
+            'success'
+
+          );
+
+        },
+
+
+
+        error: (error) => {
+
+          console.error(
+
+            'FORGOT PASSWORD ERROR:',
+
+            error
+
+          );
+
+
+
+          this.forgotError =
+
+            error?.error?.message ||
+
+            error?.error?.error ||
+
+            'Unable to reset password.';
+
+
+
+          // FAIL POPUP
+
+          this.showPopup(this.forgotError, 'error');
+
+        }
+
+      });
+
+  }
+
+
+
+  // ======================================
+
+  // CHANGE EMAIL
+
+  // ======================================
+
+  submitChangeEmail(): void {
+
+    this.emailMessage = '';
+
+    this.emailError = '';
+
+
+
+    // Validate email
+
+    if (
+
+      !this.newEmail.trim()
+
+    ) {
+
+      this.emailError =
+
+        'Please enter a new email address.';
+
+      this.showPopup(this.emailError, 'error');
+
+      return;
+
+    }
+
+
+
+    // Check if email is same
+
+    if (
+
+      this.newEmail.trim().toLowerCase() ===
+
+      this.getEmail().trim().toLowerCase()
+
+    ) {
+
+      this.emailError =
+
+        'Please enter a different email address.';
+
+      this.showPopup(this.emailError, 'error');
+
+      return;
+
+    }
+
+
+
+    // Basic email validation
+
+    const emailPattern =
+
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+
+    if (
+
+      !emailPattern.test(
+
+        this.newEmail.trim()
+
+      )
+
+    ) {
+
+      this.emailError =
+
+        'Please enter a valid email address.';
+
+      this.showPopup(this.emailError, 'error');
+
+      return;
+
+    }
+
+
+
+    // Call backend
+
+    this.authService
+
+      .changeEmail(
+
+        this.newEmail.trim()
+
+      )
+
+      .subscribe({
+
+        next: (updatedUser) => {
+
+          this.emailMessage =
+
+            'Email address changed successfully.';
+
+
+
+          // Clear field
+
+          this.newEmail = '';
+
+
+
+          // Update local user information
+
+          if (updatedUser) {
+
+            localStorage.setItem(
+
+              'currentUser',
+
+              JSON.stringify(updatedUser)
+
+            );
+
+          }
+
+
+
+          // SUCCESS POPUP
+
+          this.showPopup(
+
+            'Email updated successfully.',
+
+            'success'
+
+          );
+
+        },
+
+
+
+        error: (error) => {
+
+          console.error(
+
+            'CHANGE EMAIL ERROR:',
+
+            error
+
+          );
+
+
+
+          this.emailError =
+
+            error?.error?.message ||
+
+            error?.error?.error ||
+
+            'Unable to change email address.';
+
+
+
+          // FAIL POPUP
+
+          this.showPopup(this.emailError, 'error');
+
+        }
+
+      });
+
+  }
+
+
+
+  // ======================================
+
+  // LOGOUT
+
+  // ======================================
+
+  logout(): void {
+
+    this.authService.logout();
+
+    this.router.navigate(
+
+      ['/login']
+
+    );
+
+  }
+
+}
