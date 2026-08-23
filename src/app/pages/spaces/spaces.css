@@ -129,19 +129,15 @@
 
 
 /* =========================
-
    MAIN
-
 ========================= */
 
 .spaces-page main {
-
-  max-width: 1000px;
-
+  width: 100%;
+  max-width: 1100px;
   margin: auto;
-
-  padding: 70px 24px 90px;
-
+  padding: 70px 40px 90px;
+  box-sizing: border-box;
 }
 
 
@@ -289,19 +285,13 @@
 
 
 /* =========================
-
    GRID
-
 ========================= */
 
 .spaces-grid {
-
   display: grid;
-
   grid-template-columns: repeat(3, minmax(0, 1fr));
-
   gap: 28px;
-
 }
 
 
@@ -347,21 +337,14 @@
 
 
 /* =========================
-
    IMAGE
-
 ========================= */
 
 .image-wrapper {
-
   position: relative;
-
-  height: 220px;
-
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-
   background: #eef2f7;
-
 }
 
 .space-image {
@@ -679,81 +662,56 @@
 ========================= */
 
 @media (max-width: 900px) {
-
   .spaces-grid {
-
     grid-template-columns: repeat(2, minmax(0, 1fr));
-
   }
 
+  .spaces-page main {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 }
 
-
-
 @media (max-width: 768px) {
-
   .spaces-page main {
-
     padding: 50px 18px 70px;
-
   }
 
   .spaces-header {
-
     flex-direction: column;
-
     align-items: flex-start;
-
     gap: 15px;
-
   }
 
   .spaces-header h1 {
-
     font-size: 34px;
-
   }
 
   .spaces-grid {
-
     grid-template-columns: 1fr;
-
   }
 
   .navbar-inner {
-
     height: 64px;
-
     padding: 0 18px;
-
   }
 
   .logo {
-
     font-size: 21px;
-
   }
 
   .navbar nav {
-
     gap: 12px;
-
   }
 
   .get-started {
-
     padding: 9px 13px;
-
     font-size: 13px;
-
   }
 
   .login-link {
-
     font-size: 13px;
-
   }
-
 }
 
 
