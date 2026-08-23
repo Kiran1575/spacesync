@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { ApplicationRef, Component } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -144,9 +144,31 @@ export class Profile {
 
     private router: Router,
 
-    private zone: NgZone
+    private appRef: ApplicationRef
 
   ) {}
+
+
+
+  // ======================================
+
+  // FORCE RENDER
+
+  // ======================================
+
+  private forceRender(): void {
+
+    try {
+
+      this.appRef.tick();
+
+    } catch (error) {
+
+      console.error('RENDER TICK ERROR:', error);
+
+    }
+
+  }
 
 
 
@@ -158,15 +180,13 @@ export class Profile {
 
   showPopup(message: string, type: 'success' | 'error' = 'success'): void {
 
-    this.zone.run(() => {
+    this.successPopupMessage = message;
 
-      this.successPopupMessage = message;
+    this.popupType = type;
 
-      this.popupType = type;
+    this.showSuccessPopup = true;
 
-      this.showSuccessPopup = true;
-
-    });
+    this.forceRender();
 
     // Clear previous timer if popup is
 
@@ -180,11 +200,9 @@ export class Profile {
 
     this.popupTimer = setTimeout(() => {
 
-      this.zone.run(() => {
+      this.showSuccessPopup = false;
 
-        this.showSuccessPopup = false;
-
-      });
+      this.forceRender();
 
     }, 3000);
 
@@ -194,11 +212,9 @@ export class Profile {
 
   closePopup(): void {
 
-    this.zone.run(() => {
+    this.showSuccessPopup = false;
 
-      this.showSuccessPopup = false;
-
-    });
+    this.forceRender();
 
     if (this.popupTimer) {
 
@@ -506,35 +522,31 @@ export class Profile {
 
         next: (response) => {
 
-          this.zone.run(() => {
+          this.passwordMessage =
 
-            this.passwordMessage =
+            response?.message ||
 
-              response?.message ||
-
-              'Password changed successfully.';
+            'Password changed successfully.';
 
 
 
-            // Clear form
+          // Clear form
 
-            this.currentPassword = '';
+          this.currentPassword = '';
 
-            this.newPassword = '';
+          this.newPassword = '';
 
-            this.confirmPassword = '';
+          this.confirmPassword = '';
 
 
 
-            // Reset password visibility
+          // Reset password visibility
 
-            this.showCurrentPassword = false;
+          this.showCurrentPassword = false;
 
-            this.showNewPassword = false;
+          this.showNewPassword = false;
 
-            this.showConfirmPassword = false;
-
-          });
+          this.showConfirmPassword = false;
 
 
 
@@ -564,17 +576,13 @@ export class Profile {
 
 
 
-          this.zone.run(() => {
+          this.passwordError =
 
-            this.passwordError =
+            error?.error?.message ||
 
-              error?.error?.message ||
+            error?.error?.error ||
 
-              error?.error?.error ||
-
-              'Unable to change password.';
-
-          });
+            'Unable to change password.';
 
 
 
@@ -682,31 +690,27 @@ export class Profile {
 
         next: (response) => {
 
-          this.zone.run(() => {
+          this.forgotMessage =
 
-            this.forgotMessage =
+            response?.message ||
 
-              response?.message ||
-
-              'Password reset successfully.';
+            'Password reset successfully.';
 
 
 
-            // Clear form
+          // Clear form
 
-            this.forgotNewPassword = '';
+          this.forgotNewPassword = '';
 
-            this.forgotConfirmPassword = '';
+          this.forgotConfirmPassword = '';
 
 
 
-            // Reset visibility
+          // Reset visibility
 
-            this.showForgotNewPassword = false;
+          this.showForgotNewPassword = false;
 
-            this.showForgotConfirmPassword = false;
-
-          });
+          this.showForgotConfirmPassword = false;
 
 
 
@@ -736,17 +740,13 @@ export class Profile {
 
 
 
-          this.zone.run(() => {
+          this.forgotError =
 
-            this.forgotError =
+            error?.error?.message ||
 
-              error?.error?.message ||
+            error?.error?.error ||
 
-              error?.error?.error ||
-
-              'Unable to reset password.';
-
-          });
+            'Unable to reset password.';
 
 
 
@@ -862,35 +862,31 @@ export class Profile {
 
         next: (updatedUser) => {
 
-          this.zone.run(() => {
+          this.emailMessage =
 
-            this.emailMessage =
-
-              'Email address changed successfully.';
+            'Email address changed successfully.';
 
 
 
-            // Clear field
+          // Clear field
 
-            this.newEmail = '';
+          this.newEmail = '';
 
 
 
-            // Update local user information
+          // Update local user information
 
-            if (updatedUser) {
+          if (updatedUser) {
 
-              localStorage.setItem(
+            localStorage.setItem(
 
-                'currentUser',
+              'currentUser',
 
-                JSON.stringify(updatedUser)
+              JSON.stringify(updatedUser)
 
-              );
+            );
 
-            }
-
-          });
+          }
 
 
 
@@ -920,17 +916,13 @@ export class Profile {
 
 
 
-          this.zone.run(() => {
+          this.emailError =
 
-            this.emailError =
+            error?.error?.message ||
 
-              error?.error?.message ||
+            error?.error?.error ||
 
-              error?.error?.error ||
-
-              'Unable to change email address.';
-
-          });
+            'Unable to change email address.';
 
 
 
