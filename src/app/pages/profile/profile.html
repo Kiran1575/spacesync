@@ -1,54 +1,43 @@
 <div class="profile-page">
 
-  <!-- SUCCESS / ERROR POPUP -->
-  @if (showSuccessPopup) {
+  <!-- SUCCESS / ERROR POPUP (always in the DOM, shown/hidden via plain DOM APIs — not Angular bindings) -->
 
-    <div class="profile-popup-overlay">
+  <div
+    class="profile-popup-overlay"
+    id="profilePopupOverlay"
+    style="display: none;">
 
-      <div
-        class="profile-popup"
-        [class.profile-popup-success]="popupType === 'success'"
-        [class.profile-popup-error]="popupType === 'error'">
+    <div
+      class="profile-popup"
+      id="profilePopup">
 
-        <div class="popup-icon">
+      <div class="popup-icon" id="profilePopupIcon">
+        ✓
+      </div>
 
-          {{ popupType === 'success' ? '✓' : '!' }}
+      <div class="popup-content">
 
-        </div>
+        <h3 id="profilePopupTitle">
+          Success
+        </h3>
 
-        <div class="popup-content">
-
-          <h3>
-
-            {{
-              popupType === 'success'
-                ? 'Success'
-                : 'Failed'
-            }}
-
-          </h3>
-
-          <p>
-            {{ successPopupMessage }}
-          </p>
-
-        </div>
-
-        <button
-          type="button"
-          class="popup-close"
-          (click)="closePopup()"
-          aria-label="Close notification">
-
-          ×
-
-        </button>
+        <p id="profilePopupMessage"></p>
 
       </div>
 
+      <button
+        type="button"
+        class="popup-close"
+        (click)="closePopup()"
+        aria-label="Close notification">
+
+        ×
+
+      </button>
+
     </div>
 
-  }
+  </div>
 
 
   <main class="profile-container">

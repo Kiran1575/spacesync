@@ -1,4 +1,4 @@
-import { ApplicationRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Router } from '@angular/router';
 
@@ -60,15 +60,9 @@ export class Profile {
 
   // ======================================
 
-  // SUCCESS / FAIL POPUP
+  // POPUP TIMER
 
   // ======================================
-
-  showSuccessPopup = false;
-
-  successPopupMessage = '';
-
-  popupType: 'success' | 'error' = 'success';
 
   private popupTimer: any;
 
@@ -142,9 +136,7 @@ export class Profile {
 
     private authService: AuthService,
 
-    private router: Router,
-
-    private appRef: ApplicationRef
+    private router: Router
 
   ) {}
 
@@ -152,41 +144,38 @@ export class Profile {
 
   // ======================================
 
-  // FORCE RENDER
-
-  // ======================================
-
-  private forceRender(): void {
-
-    try {
-
-      this.appRef.tick();
-
-    } catch (error) {
-
-      console.error('RENDER TICK ERROR:', error);
-
-    }
-
-  }
-
-
-
-  // ======================================
-
   // SUCCESS / FAIL POPUP
+  // Uses plain DOM APIs on purpose — this element's visibility
+  // does not go through Angular's change detection at all, so it
+  // is unaffected by any HTTP zone/CD timing issues.
 
   // ======================================
 
   showPopup(message: string, type: 'success' | 'error' = 'success'): void {
 
-    this.successPopupMessage = message;
+    const overlay = document.getElementById('profilePopupOverlay');
+    const popup = document.getElementById('profilePopup');
+    const icon = document.getElementById('profilePopupIcon');
+    const title = document.getElementById('profilePopupTitle');
+    const messageEl = document.getElementById('profilePopupMessage');
 
-    this.popupType = type;
+    if (overlay && popup && icon && title && messageEl) {
 
-    this.showSuccessPopup = true;
+      messageEl.textContent = message;
 
-    this.forceRender();
+      title.textContent = type === 'success' ? 'Success' : 'Failed';
+
+      icon.textContent = type === 'success' ? '✓' : '!';
+
+      popup.classList.remove('profile-popup-success', 'profile-popup-error');
+
+      popup.classList.add(
+        type === 'success' ? 'profile-popup-success' : 'profile-popup-error'
+      );
+
+      overlay.style.display = 'flex';
+
+    }
 
     // Clear previous timer if popup is
 
@@ -200,9 +189,11 @@ export class Profile {
 
     this.popupTimer = setTimeout(() => {
 
-      this.showSuccessPopup = false;
+      const overlayEl = document.getElementById('profilePopupOverlay');
 
-      this.forceRender();
+      if (overlayEl) {
+        overlayEl.style.display = 'none';
+      }
 
     }, 3000);
 
@@ -212,9 +203,11 @@ export class Profile {
 
   closePopup(): void {
 
-    this.showSuccessPopup = false;
+    const overlay = document.getElementById('profilePopupOverlay');
 
-    this.forceRender();
+    if (overlay) {
+      overlay.style.display = 'none';
+    }
 
     if (this.popupTimer) {
 
@@ -666,294 +659,4 @@ export class Profile {
 
         'New passwords do not match.';
 
-      this.showPopup(this.forgotError, 'error');
-
-      return;
-
-    }
-
-
-
-    // Call backend
-
-    this.authService
-
-      .forgotPassword(
-
-        this.forgotEmail,
-
-        this.forgotNewPassword
-
-      )
-
-      .subscribe({
-
-        next: (response) => {
-
-          this.forgotMessage =
-
-            response?.message ||
-
-            'Password reset successfully.';
-
-
-
-          // Clear form
-
-          this.forgotNewPassword = '';
-
-          this.forgotConfirmPassword = '';
-
-
-
-          // Reset visibility
-
-          this.showForgotNewPassword = false;
-
-          this.showForgotConfirmPassword = false;
-
-
-
-          // SUCCESS POPUP
-
-          this.showPopup(
-
-            'Password reset successfully.',
-
-            'success'
-
-          );
-
-        },
-
-
-
-        error: (error) => {
-
-          console.error(
-
-            'FORGOT PASSWORD ERROR:',
-
-            error
-
-          );
-
-
-
-          this.forgotError =
-
-            error?.error?.message ||
-
-            error?.error?.error ||
-
-            'Unable to reset password.';
-
-
-
-          // FAIL POPUP
-
-          this.showPopup(this.forgotError, 'error');
-
-        }
-
-      });
-
-  }
-
-
-
-  // ======================================
-
-  // CHANGE EMAIL
-
-  // ======================================
-
-  submitChangeEmail(): void {
-
-    this.emailMessage = '';
-
-    this.emailError = '';
-
-
-
-    // Validate email
-
-    if (
-
-      !this.newEmail.trim()
-
-    ) {
-
-      this.emailError =
-
-        'Please enter a new email address.';
-
-      this.showPopup(this.emailError, 'error');
-
-      return;
-
-    }
-
-
-
-    // Check if email is same
-
-    if (
-
-      this.newEmail.trim().toLowerCase() ===
-
-      this.getEmail().trim().toLowerCase()
-
-    ) {
-
-      this.emailError =
-
-        'Please enter a different email address.';
-
-      this.showPopup(this.emailError, 'error');
-
-      return;
-
-    }
-
-
-
-    // Basic email validation
-
-    const emailPattern =
-
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-
-    if (
-
-      !emailPattern.test(
-
-        this.newEmail.trim()
-
-      )
-
-    ) {
-
-      this.emailError =
-
-        'Please enter a valid email address.';
-
-      this.showPopup(this.emailError, 'error');
-
-      return;
-
-    }
-
-
-
-    // Call backend
-
-    this.authService
-
-      .changeEmail(
-
-        this.newEmail.trim()
-
-      )
-
-      .subscribe({
-
-        next: (updatedUser) => {
-
-          this.emailMessage =
-
-            'Email address changed successfully.';
-
-
-
-          // Clear field
-
-          this.newEmail = '';
-
-
-
-          // Update local user information
-
-          if (updatedUser) {
-
-            localStorage.setItem(
-
-              'currentUser',
-
-              JSON.stringify(updatedUser)
-
-            );
-
-          }
-
-
-
-          // SUCCESS POPUP
-
-          this.showPopup(
-
-            'Email updated successfully.',
-
-            'success'
-
-          );
-
-        },
-
-
-
-        error: (error) => {
-
-          console.error(
-
-            'CHANGE EMAIL ERROR:',
-
-            error
-
-          );
-
-
-
-          this.emailError =
-
-            error?.error?.message ||
-
-            error?.error?.error ||
-
-            'Unable to change email address.';
-
-
-
-          // FAIL POPUP
-
-          this.showPopup(this.emailError, 'error');
-
-        }
-
-      });
-
-  }
-
-
-
-  // ======================================
-
-  // LOGOUT
-
-  // ======================================
-
-  logout(): void {
-
-    this.authService.logout();
-
-    this.router.navigate(
-
-      ['/login']
-
-    );
-
-  }
-
-}
+      this.showPopup(this.forgotError,
