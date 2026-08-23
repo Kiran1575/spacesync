@@ -1,5 +1,6 @@
 import { Space } from './space';
 
+
 export interface Booking {
 
   id: number;
@@ -23,4 +24,22 @@ export interface Booking {
   totalAmount: number;
 
   status: string;
+
+}
+
+
+export interface BookingRequest {
+
+  userId: number;
+
+  spaceId: number;
+
+  bookingDate: string;
+
+  startTime: string;
+
+  duration: number;
+
+  totalAmount: number;
+
 }
