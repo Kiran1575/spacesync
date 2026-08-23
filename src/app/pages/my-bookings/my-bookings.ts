@@ -157,9 +157,6 @@ export class MyBookings implements OnInit {
           );
 
 
-          // Make a completely new array
-          // so Angular detects the change.
-
           if (Array.isArray(data)) {
 
             this.bookings = [...data].sort(
