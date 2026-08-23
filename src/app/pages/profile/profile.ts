@@ -39,7 +39,7 @@ export class Profile {
   // POPUP TIMER
   // ======================================
 
-  private popupTimer: ReturnType<typeof setTimeout> | null = null;
+  private popupTimer: any;
 
 
   // ======================================
@@ -116,66 +116,81 @@ export class Profile {
       'profilePopupTitle'
     );
 
-    const messageEl = document.getElementById(
+    const messageElement = document.getElementById(
       'profilePopupMessage'
     );
 
+
+    // Make sure popup elements exist
     if (
-      overlay &&
-      popup &&
-      icon &&
-      title &&
-      messageEl
+      !overlay ||
+      !popup ||
+      !icon ||
+      !title ||
+      !messageElement
     ) {
-
-      messageEl.textContent = message;
-
-      title.textContent =
-        type === 'success'
-          ? 'Success'
-          : 'Failed';
-
-      icon.textContent =
-        type === 'success'
-          ? '✓'
-          : '!';
-
-      popup.classList.remove(
-        'profile-popup-success',
-        'profile-popup-error'
+      console.error(
+        'Profile popup elements not found in HTML.'
       );
 
-      popup.classList.add(
-        type === 'success'
-          ? 'profile-popup-success'
-          : 'profile-popup-error'
-      );
-
-      overlay.style.display = 'flex';
+      return;
     }
 
 
-    // Clear previous timer
+    // Set popup message
+    messageElement.textContent = message;
 
+
+    // Set title
+    title.textContent =
+      type === 'success'
+        ? 'Success'
+        : 'Failed';
+
+
+    // Set icon
+    icon.textContent =
+      type === 'success'
+        ? '✓'
+        : '!';
+
+
+    // Remove previous popup classes
+    popup.classList.remove(
+      'profile-popup-success',
+      'profile-popup-error'
+    );
+
+
+    // Add correct popup class
+    popup.classList.add(
+      type === 'success'
+        ? 'profile-popup-success'
+        : 'profile-popup-error'
+    );
+
+
+    // Show popup
+    overlay.style.display = 'flex';
+
+
+    // Clear previous timer
     if (this.popupTimer) {
       clearTimeout(this.popupTimer);
     }
 
 
-    // Automatically hide popup after 3 seconds
-
+    // Automatically close after 3 seconds
     this.popupTimer = setTimeout(() => {
 
-      const overlayEl =
+      const currentOverlay =
         document.getElementById(
           'profilePopupOverlay'
         );
 
-      if (overlayEl) {
-        overlayEl.style.display = 'none';
+      if (currentOverlay) {
+        currentOverlay.style.display = 'none';
       }
-
-      this.popupTimer = null;
 
     }, 3000);
   }
@@ -187,14 +202,14 @@ export class Profile {
 
   closePopup(): void {
 
-    const overlay =
-      document.getElementById(
-        'profilePopupOverlay'
-      );
+    const overlay = document.getElementById(
+      'profilePopupOverlay'
+    );
 
     if (overlay) {
       overlay.style.display = 'none';
     }
+
 
     if (this.popupTimer) {
 
@@ -210,7 +225,9 @@ export class Profile {
   // ======================================
 
   getUser(): any {
+
     return this.authService.getCurrentUser();
+
   }
 
 
@@ -219,6 +236,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.fullName || 'User';
+
   }
 
 
@@ -227,6 +245,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.email || 'Email unavailable';
+
   }
 
 
@@ -235,6 +254,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.id ?? 'N/A';
+
   }
 
 
@@ -243,6 +263,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.role || 'USER';
+
   }
 
 
@@ -258,6 +279,7 @@ export class Profile {
       .trim()
       .charAt(0)
       .toUpperCase();
+
   }
 
 
@@ -277,7 +299,9 @@ export class Profile {
 
       this.showForgotPassword = false;
       this.showChangeEmail = false;
+
     }
+
   }
 
 
@@ -300,7 +324,9 @@ export class Profile {
 
       this.forgotEmail =
         this.getEmail();
+
     }
+
   }
 
 
@@ -320,7 +346,9 @@ export class Profile {
 
       this.showChangePassword = false;
       this.showForgotPassword = false;
+
     }
+
   }
 
 
@@ -332,6 +360,7 @@ export class Profile {
 
     this.showCurrentPassword =
       !this.showCurrentPassword;
+
   }
 
 
@@ -339,6 +368,7 @@ export class Profile {
 
     this.showNewPassword =
       !this.showNewPassword;
+
   }
 
 
@@ -346,6 +376,7 @@ export class Profile {
 
     this.showConfirmPassword =
       !this.showConfirmPassword;
+
   }
 
 
@@ -353,6 +384,7 @@ export class Profile {
 
     this.showForgotNewPassword =
       !this.showForgotNewPassword;
+
   }
 
 
@@ -360,6 +392,7 @@ export class Profile {
 
     this.showForgotConfirmPassword =
       !this.showForgotConfirmPassword;
+
   }
 
 
@@ -373,8 +406,7 @@ export class Profile {
     this.passwordError = '';
 
 
-    // Validate fields
-
+    // Validate current and new password
     if (
       !this.currentPassword.trim() ||
       !this.newPassword.trim()
@@ -393,7 +425,6 @@ export class Profile {
 
 
     // Confirm password
-
     if (
       this.newPassword !==
       this.confirmPassword
@@ -411,8 +442,7 @@ export class Profile {
     }
 
 
-    // Backend request
-
+    // Call backend
     this.authService
       .changePassword(
         this.currentPassword,
@@ -428,25 +458,23 @@ export class Profile {
 
 
           // Clear form
-
           this.currentPassword = '';
           this.newPassword = '';
           this.confirmPassword = '';
 
 
           // Reset visibility
-
           this.showCurrentPassword = false;
           this.showNewPassword = false;
           this.showConfirmPassword = false;
 
 
-          // Success popup
-
+          // SUCCESS POPUP
           this.showPopup(
             'Password updated successfully.',
             'success'
           );
+
         },
 
 
@@ -464,15 +492,16 @@ export class Profile {
             'Unable to change password.';
 
 
-          // Error popup
-
+          // ERROR POPUP
           this.showPopup(
             this.passwordError,
             'error'
           );
+
         }
 
       });
+
   }
 
 
@@ -487,8 +516,9 @@ export class Profile {
 
 
     // Validate email
-
-    if (!this.forgotEmail.trim()) {
+    if (
+      !this.forgotEmail.trim()
+    ) {
 
       this.forgotError =
         'Please enter your registered email.';
@@ -503,8 +533,9 @@ export class Profile {
 
 
     // Validate new password
-
-    if (!this.forgotNewPassword.trim()) {
+    if (
+      !this.forgotNewPassword.trim()
+    ) {
 
       this.forgotError =
         'Please enter a new password.';
@@ -519,7 +550,6 @@ export class Profile {
 
 
     // Confirm password
-
     if (
       this.forgotNewPassword !==
       this.forgotConfirmPassword
@@ -537,8 +567,7 @@ export class Profile {
     }
 
 
-    // Backend request
-
+    // Call backend
     this.authService
       .forgotPassword(
         this.forgotEmail,
@@ -553,24 +582,22 @@ export class Profile {
             'Password reset successfully.';
 
 
-          // Clear password fields
-
+          // Clear form
           this.forgotNewPassword = '';
           this.forgotConfirmPassword = '';
 
 
           // Reset visibility
-
           this.showForgotNewPassword = false;
           this.showForgotConfirmPassword = false;
 
 
-          // Success popup
-
+          // SUCCESS POPUP
           this.showPopup(
             'Password reset successfully.',
             'success'
           );
+
         },
 
 
@@ -588,15 +615,16 @@ export class Profile {
             'Unable to reset password.';
 
 
-          // Error popup
-
+          // ERROR POPUP
           this.showPopup(
             this.forgotError,
             'error'
           );
+
         }
 
       });
+
   }
 
 
@@ -611,8 +639,9 @@ export class Profile {
 
 
     // Validate email
-
-    if (!this.newEmail.trim()) {
+    if (
+      !this.newEmail.trim()
+    ) {
 
       this.emailError =
         'Please enter a new email address.';
@@ -626,8 +655,7 @@ export class Profile {
     }
 
 
-    // Check same email
-
+    // Check if email is same
     if (
       this.newEmail
         .trim()
@@ -649,8 +677,7 @@ export class Profile {
     }
 
 
-    // Validate email format
-
+    // Basic email validation
     const emailPattern =
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -673,8 +700,7 @@ export class Profile {
     }
 
 
-    // Backend request
-
+    // Call backend
     this.authService
       .changeEmail(
         this.newEmail.trim()
@@ -688,27 +714,26 @@ export class Profile {
 
 
           // Clear field
-
           this.newEmail = '';
 
 
-          // Update local storage
-
+          // Update local user information
           if (updatedUser) {
 
             localStorage.setItem(
               'currentUser',
               JSON.stringify(updatedUser)
             );
+
           }
 
 
-          // Success popup
-
+          // SUCCESS POPUP
           this.showPopup(
             'Email updated successfully.',
             'success'
           );
+
         },
 
 
@@ -726,15 +751,16 @@ export class Profile {
             'Unable to change email address.';
 
 
-          // Error popup
-
+          // ERROR POPUP
           this.showPopup(
             this.emailError,
             'error'
           );
+
         }
 
       });
+
   }
 
 
@@ -746,9 +772,10 @@ export class Profile {
 
     this.authService.logout();
 
-    this.router.navigate([
-      '/login'
-    ]);
+    this.router.navigate(
+      ['/login']
+    );
+
   }
 
 }
