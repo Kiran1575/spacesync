@@ -1,209 +1,196 @@
 import { Component } from '@angular/core';
-
 import { Router } from '@angular/router';
-
 import { FormsModule } from '@angular/forms';
-
 import { AuthService } from '../../services/auth';
 
 @Component({
-
   selector: 'app-profile',
-
   standalone: true,
-
   imports: [
-
     FormsModule
-
   ],
-
   templateUrl: './profile.html',
-
   styleUrl: './profile.css'
-
 })
-
 export class Profile {
 
   // ======================================
-
   // PANEL STATES
-
   // ======================================
 
   showChangePassword = false;
-
   showForgotPassword = false;
-
   showChangeEmail = false;
 
 
-
   // ======================================
-
   // PASSWORD VISIBILITY
-
   // ======================================
 
   showCurrentPassword = false;
-
   showNewPassword = false;
-
   showConfirmPassword = false;
 
   showForgotNewPassword = false;
-
   showForgotConfirmPassword = false;
 
 
-
   // ======================================
-
   // POPUP TIMER
-
   // ======================================
 
-  private popupTimer: any;
-
+  private popupTimer: ReturnType<typeof setTimeout> | null = null;
 
 
   // ======================================
-
   // CHANGE PASSWORD FORM
-
   // ======================================
 
   currentPassword = '';
-
   newPassword = '';
-
   confirmPassword = '';
 
 
-
   // ======================================
-
   // FORGOT PASSWORD FORM
-
   // ======================================
 
   forgotEmail = '';
-
   forgotNewPassword = '';
-
   forgotConfirmPassword = '';
 
 
-
   // ======================================
-
   // CHANGE EMAIL FORM
-
   // ======================================
 
   newEmail = '';
 
 
-
   // ======================================
-
   // INLINE MESSAGES
-
   // ======================================
 
   passwordMessage = '';
-
   passwordError = '';
 
   forgotMessage = '';
-
   forgotError = '';
 
   emailMessage = '';
-
   emailError = '';
 
 
-
   // ======================================
-
   // CONSTRUCTOR
-
   // ======================================
 
   constructor(
-
     private authService: AuthService,
-
     private router: Router
-
   ) {}
 
 
-
+  // ======================================
+  // SUCCESS / ERROR POPUP
   // ======================================
 
-  // SUCCESS / FAIL POPUP
-  // Uses plain DOM APIs on purpose — this element's visibility
-  // does not go through Angular's change detection at all, so it
-  // is unaffected by any HTTP zone/CD timing issues.
+  showPopup(
+    message: string,
+    type: 'success' | 'error' = 'success'
+  ): void {
 
-  // ======================================
+    const overlay = document.getElementById(
+      'profilePopupOverlay'
+    );
 
-  showPopup(message: string, type: 'success' | 'error' = 'success'): void {
+    const popup = document.getElementById(
+      'profilePopup'
+    );
 
-    const overlay = document.getElementById('profilePopupOverlay');
-    const popup = document.getElementById('profilePopup');
-    const icon = document.getElementById('profilePopupIcon');
-    const title = document.getElementById('profilePopupTitle');
-    const messageEl = document.getElementById('profilePopupMessage');
+    const icon = document.getElementById(
+      'profilePopupIcon'
+    );
 
-    if (overlay && popup && icon && title && messageEl) {
+    const title = document.getElementById(
+      'profilePopupTitle'
+    );
+
+    const messageEl = document.getElementById(
+      'profilePopupMessage'
+    );
+
+    if (
+      overlay &&
+      popup &&
+      icon &&
+      title &&
+      messageEl
+    ) {
 
       messageEl.textContent = message;
 
-      title.textContent = type === 'success' ? 'Success' : 'Failed';
+      title.textContent =
+        type === 'success'
+          ? 'Success'
+          : 'Failed';
 
-      icon.textContent = type === 'success' ? '✓' : '!';
+      icon.textContent =
+        type === 'success'
+          ? '✓'
+          : '!';
 
-      popup.classList.remove('profile-popup-success', 'profile-popup-error');
+      popup.classList.remove(
+        'profile-popup-success',
+        'profile-popup-error'
+      );
 
       popup.classList.add(
-        type === 'success' ? 'profile-popup-success' : 'profile-popup-error'
+        type === 'success'
+          ? 'profile-popup-success'
+          : 'profile-popup-error'
       );
 
       overlay.style.display = 'flex';
-
     }
 
-    // Clear previous timer if popup is
 
-    // triggered again before 3 seconds
+    // Clear previous timer
 
     if (this.popupTimer) {
-
       clearTimeout(this.popupTimer);
-
     }
+
+
+    // Automatically hide popup after 3 seconds
 
     this.popupTimer = setTimeout(() => {
 
-      const overlayEl = document.getElementById('profilePopupOverlay');
+      const overlayEl =
+        document.getElementById(
+          'profilePopupOverlay'
+        );
 
       if (overlayEl) {
         overlayEl.style.display = 'none';
       }
 
-    }, 3000);
+      this.popupTimer = null;
 
+    }, 3000);
   }
 
 
+  // ======================================
+  // CLOSE POPUP
+  // ======================================
 
   closePopup(): void {
 
-    const overlay = document.getElementById('profilePopupOverlay');
+    const overlay =
+      document.getElementById(
+        'profilePopupOverlay'
+      );
 
     if (overlay) {
       overlay.style.display = 'none';
@@ -214,25 +201,17 @@ export class Profile {
       clearTimeout(this.popupTimer);
 
       this.popupTimer = null;
-
     }
-
   }
 
 
-
   // ======================================
-
   // CURRENT USER
-
   // ======================================
 
   getUser(): any {
-
     return this.authService.getCurrentUser();
-
   }
-
 
 
   getFullName(): string {
@@ -240,9 +219,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.fullName || 'User';
-
   }
-
 
 
   getEmail(): string {
@@ -250,9 +227,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.email || 'Email unavailable';
-
   }
-
 
 
   getUserId(): number | string {
@@ -260,9 +235,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.id ?? 'N/A';
-
   }
-
 
 
   getRole(): string {
@@ -270,9 +243,7 @@ export class Profile {
     const user = this.getUser();
 
     return user?.role || 'USER';
-
   }
-
 
 
   getInitial(): string {
@@ -280,585 +251,440 @@ export class Profile {
     const name = this.getFullName();
 
     if (!name || name === 'User') {
-
       return 'U';
-
     }
 
     return name
-
       .trim()
-
       .charAt(0)
-
       .toUpperCase();
-
   }
 
 
-
   // ======================================
-
   // TOGGLE CHANGE PASSWORD
-
   // ======================================
 
   toggleChangePassword(): void {
 
     this.showChangePassword =
-
       !this.showChangePassword;
 
     this.passwordMessage = '';
-
     this.passwordError = '';
 
     if (this.showChangePassword) {
 
       this.showForgotPassword = false;
-
       this.showChangeEmail = false;
-
     }
-
   }
 
 
-
   // ======================================
-
   // TOGGLE FORGOT PASSWORD
-
   // ======================================
 
   toggleForgotPassword(): void {
 
     this.showForgotPassword =
-
       !this.showForgotPassword;
 
     this.forgotMessage = '';
-
     this.forgotError = '';
 
     if (this.showForgotPassword) {
 
       this.showChangePassword = false;
-
       this.showChangeEmail = false;
 
       this.forgotEmail =
-
         this.getEmail();
-
     }
-
   }
 
 
-
   // ======================================
-
   // TOGGLE CHANGE EMAIL
-
   // ======================================
 
   toggleChangeEmail(): void {
 
     this.showChangeEmail =
-
       !this.showChangeEmail;
 
     this.emailMessage = '';
-
     this.emailError = '';
 
     if (this.showChangeEmail) {
 
       this.showChangePassword = false;
-
       this.showForgotPassword = false;
-
     }
-
   }
 
 
-
   // ======================================
-
   // PASSWORD VISIBILITY
-
   // ======================================
 
   toggleCurrentPassword(): void {
 
     this.showCurrentPassword =
-
       !this.showCurrentPassword;
-
   }
-
 
 
   toggleNewPassword(): void {
 
     this.showNewPassword =
-
       !this.showNewPassword;
-
   }
-
 
 
   toggleConfirmPassword(): void {
 
     this.showConfirmPassword =
-
       !this.showConfirmPassword;
-
   }
-
 
 
   toggleForgotNewPassword(): void {
 
     this.showForgotNewPassword =
-
       !this.showForgotNewPassword;
-
   }
-
 
 
   toggleForgotConfirmPassword(): void {
 
     this.showForgotConfirmPassword =
-
       !this.showForgotConfirmPassword;
-
   }
 
 
-
   // ======================================
-
   // CHANGE PASSWORD
-
   // ======================================
 
   submitChangePassword(): void {
 
     this.passwordMessage = '';
-
     this.passwordError = '';
 
 
-
-    // Validate current and new password
+    // Validate fields
 
     if (
-
       !this.currentPassword.trim() ||
-
       !this.newPassword.trim()
-
     ) {
 
       this.passwordError =
-
         'Please enter your current and new password.';
 
-      this.showPopup(this.passwordError, 'error');
+      this.showPopup(
+        this.passwordError,
+        'error'
+      );
 
       return;
-
     }
-
 
 
     // Confirm password
 
     if (
-
       this.newPassword !==
-
       this.confirmPassword
-
     ) {
 
       this.passwordError =
-
         'New passwords do not match.';
 
-      this.showPopup(this.passwordError, 'error');
+      this.showPopup(
+        this.passwordError,
+        'error'
+      );
 
       return;
-
     }
 
 
-
-    // Call backend
+    // Backend request
 
     this.authService
-
       .changePassword(
-
         this.currentPassword,
-
         this.newPassword
-
       )
-
       .subscribe({
 
         next: (response) => {
 
           this.passwordMessage =
-
             response?.message ||
-
             'Password changed successfully.';
-
 
 
           // Clear form
 
           this.currentPassword = '';
-
           this.newPassword = '';
-
           this.confirmPassword = '';
 
 
-
-          // Reset password visibility
+          // Reset visibility
 
           this.showCurrentPassword = false;
-
           this.showNewPassword = false;
-
           this.showConfirmPassword = false;
 
 
-
-          // SUCCESS POPUP
+          // Success popup
 
           this.showPopup(
-
             'Password updated successfully.',
-
             'success'
-
           );
-
         },
-
 
 
         error: (error) => {
 
           console.error(
-
             'CHANGE PASSWORD ERROR:',
-
             error
-
           );
 
 
-
           this.passwordError =
-
             error?.error?.message ||
-
             error?.error?.error ||
-
             'Unable to change password.';
 
 
+          // Error popup
 
-          // FAIL POPUP
-
-          this.showPopup(this.passwordError, 'error');
-
+          this.showPopup(
+            this.passwordError,
+            'error'
+          );
         }
 
       });
-
   }
 
 
-
   // ======================================
-
   // FORGOT PASSWORD
-
   // ======================================
 
   submitForgotPassword(): void {
 
     this.forgotMessage = '';
-
     this.forgotError = '';
-
 
 
     // Validate email
 
-    if (
-
-      !this.forgotEmail.trim()
-
-    ) {
+    if (!this.forgotEmail.trim()) {
 
       this.forgotError =
-
         'Please enter your registered email.';
 
-      this.showPopup(this.forgotError, 'error');
+      this.showPopup(
+        this.forgotError,
+        'error'
+      );
 
       return;
-
     }
-
 
 
     // Validate new password
 
-    if (
-
-      !this.forgotNewPassword.trim()
-
-    ) {
+    if (!this.forgotNewPassword.trim()) {
 
       this.forgotError =
-
         'Please enter a new password.';
 
-      this.showPopup(this.forgotError, 'error');
+      this.showPopup(
+        this.forgotError,
+        'error'
+      );
 
       return;
-
     }
-
 
 
     // Confirm password
 
     if (
-
       this.forgotNewPassword !==
-
       this.forgotConfirmPassword
-
     ) {
 
       this.forgotError =
-
         'New passwords do not match.';
 
-      this.showPopup(this.forgotError, 'error');
+      this.showPopup(
+        this.forgotError,
+        'error'
+      );
 
       return;
-
     }
 
 
-
-    // Call backend
+    // Backend request
 
     this.authService
-
       .forgotPassword(
-
         this.forgotEmail,
-
         this.forgotNewPassword
-
       )
-
       .subscribe({
 
         next: (response) => {
 
           this.forgotMessage =
-
             response?.message ||
-
             'Password reset successfully.';
 
 
-
-          // Clear form
+          // Clear password fields
 
           this.forgotNewPassword = '';
-
           this.forgotConfirmPassword = '';
-
 
 
           // Reset visibility
 
           this.showForgotNewPassword = false;
-
           this.showForgotConfirmPassword = false;
 
 
-
-          // SUCCESS POPUP
+          // Success popup
 
           this.showPopup(
-
             'Password reset successfully.',
-
             'success'
-
           );
-
         },
-
 
 
         error: (error) => {
 
           console.error(
-
             'FORGOT PASSWORD ERROR:',
-
             error
-
           );
 
 
-
           this.forgotError =
-
             error?.error?.message ||
-
             error?.error?.error ||
-
             'Unable to reset password.';
 
 
+          // Error popup
 
-          // FAIL POPUP
-
-          this.showPopup(this.forgotError, 'error');
-
+          this.showPopup(
+            this.forgotError,
+            'error'
+          );
         }
 
       });
-
   }
 
 
-
   // ======================================
-
   // CHANGE EMAIL
-
   // ======================================
 
   submitChangeEmail(): void {
 
     this.emailMessage = '';
-
     this.emailError = '';
-
 
 
     // Validate email
 
-    if (
-
-      !this.newEmail.trim()
-
-    ) {
+    if (!this.newEmail.trim()) {
 
       this.emailError =
-
         'Please enter a new email address.';
 
-      this.showPopup(this.emailError, 'error');
+      this.showPopup(
+        this.emailError,
+        'error'
+      );
 
       return;
-
     }
 
 
-
-    // Check if email is same
+    // Check same email
 
     if (
-
-      this.newEmail.trim().toLowerCase() ===
-
-      this.getEmail().trim().toLowerCase()
-
+      this.newEmail
+        .trim()
+        .toLowerCase() ===
+      this.getEmail()
+        .trim()
+        .toLowerCase()
     ) {
 
       this.emailError =
-
         'Please enter a different email address.';
 
-      this.showPopup(this.emailError, 'error');
+      this.showPopup(
+        this.emailError,
+        'error'
+      );
 
       return;
-
     }
 
 
-
-    // Basic email validation
+    // Validate email format
 
     const emailPattern =
-
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
-
     if (
-
       !emailPattern.test(
-
         this.newEmail.trim()
-
       )
-
     ) {
 
       this.emailError =
-
         'Please enter a valid email address.';
 
-      this.showPopup(this.emailError, 'error');
+      this.showPopup(
+        this.emailError,
+        'error'
+      );
 
       return;
-
     }
 
 
-
-    // Call backend
+    // Backend request
 
     this.authService
-
       .changeEmail(
-
         this.newEmail.trim()
-
       )
-
       .subscribe({
 
         next: (updatedUser) => {
 
           this.emailMessage =
-
             'Email address changed successfully.';
-
 
 
           // Clear field
@@ -866,87 +692,63 @@ export class Profile {
           this.newEmail = '';
 
 
-
-          // Update local user information
+          // Update local storage
 
           if (updatedUser) {
 
             localStorage.setItem(
-
               'currentUser',
-
               JSON.stringify(updatedUser)
-
             );
-
           }
 
 
-
-          // SUCCESS POPUP
+          // Success popup
 
           this.showPopup(
-
             'Email updated successfully.',
-
             'success'
-
           );
-
         },
-
 
 
         error: (error) => {
 
           console.error(
-
             'CHANGE EMAIL ERROR:',
-
             error
-
           );
 
 
-
           this.emailError =
-
             error?.error?.message ||
-
             error?.error?.error ||
-
             'Unable to change email address.';
 
 
+          // Error popup
 
-          // FAIL POPUP
-
-          this.showPopup(this.emailError, 'error');
-
+          this.showPopup(
+            this.emailError,
+            'error'
+          );
         }
 
       });
-
   }
 
 
-
   // ======================================
-
   // LOGOUT
-
   // ======================================
 
   logout(): void {
 
     this.authService.logout();
 
-    this.router.navigate(
-
-      ['/login']
-
-    );
-
+    this.router.navigate([
+      '/login'
+    ]);
   }
 
 }
